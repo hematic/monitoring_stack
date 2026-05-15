@@ -1,0 +1,105 @@
+{
+  "title": "Plex",
+  "uid": "plex-dashboard",
+  "schemaVersion": 38,
+  "version": 1,
+  "refresh": "30s",
+  "time": { "from": "now-3h", "to": "now" },
+  "panels": [
+    {
+      "id": 1,
+      "title": "Active Streams",
+      "type": "stat",
+      "gridPos": { "h": 4, "w": 4, "x": 0, "y": 0 },
+      "options": { "colorMode": "background", "graphMode": "none", "textMode": "auto" },
+      "fieldConfig": {
+        "defaults": {
+          "color": { "mode": "thresholds" },
+          "thresholds": { "steps": [{ "color": "green", "value": null }, { "color": "yellow", "value": 3 }, { "color": "red", "value": 6 }] }
+        }
+      },
+      "targets": [{ "expr": "plex_active_streams_total", "legendFormat": "Total", "datasource": { "type": "prometheus" } }]
+    },
+    {
+      "id": 2,
+      "title": "Direct Play",
+      "type": "stat",
+      "gridPos": { "h": 4, "w": 4, "x": 4, "y": 0 },
+      "options": { "colorMode": "background", "graphMode": "none" },
+      "fieldConfig": { "defaults": { "color": { "mode": "thresholds" }, "thresholds": { "steps": [{ "color": "green", "value": null }] } } },
+      "targets": [{ "expr": "plex_active_streams_direct_play", "legendFormat": "Direct Play", "datasource": { "type": "prometheus" } }]
+    },
+    {
+      "id": 3,
+      "title": "Transcoding",
+      "type": "stat",
+      "gridPos": { "h": 4, "w": 4, "x": 8, "y": 0 },
+      "options": { "colorMode": "background", "graphMode": "none" },
+      "fieldConfig": { "defaults": { "color": { "mode": "thresholds" }, "thresholds": { "steps": [{ "color": "green", "value": null }, { "color": "orange", "value": 1 }, { "color": "red", "value": 3 }] } } },
+      "targets": [{ "expr": "plex_active_streams_transcode", "legendFormat": "Transcoding", "datasource": { "type": "prometheus" } }]
+    },
+    {
+      "id": 4,
+      "title": "Total Bandwidth",
+      "type": "stat",
+      "gridPos": { "h": 4, "w": 4, "x": 12, "y": 0 },
+      "options": { "colorMode": "background", "graphMode": "none" },
+      "fieldConfig": { "defaults": { "unit": "kbytes", "color": { "mode": "thresholds" }, "thresholds": { "steps": [{ "color": "green", "value": null }, { "color": "yellow", "value": 50000 }, { "color": "red", "value": 100000 }] } } },
+      "targets": [{ "expr": "plex_bandwidth_total_kbps", "legendFormat": "Total", "datasource": { "type": "prometheus" } }]
+    },
+    {
+      "id": 5,
+      "title": "LAN Bandwidth",
+      "type": "stat",
+      "gridPos": { "h": 4, "w": 4, "x": 16, "y": 0 },
+      "options": { "colorMode": "background", "graphMode": "none" },
+      "fieldConfig": { "defaults": { "unit": "kbytes", "color": { "mode": "thresholds" }, "thresholds": { "steps": [{ "color": "green", "value": null }] } } },
+      "targets": [{ "expr": "plex_bandwidth_lan_kbps", "legendFormat": "LAN", "datasource": { "type": "prometheus" } }]
+    },
+    {
+      "id": 6,
+      "title": "WAN Bandwidth",
+      "type": "stat",
+      "gridPos": { "h": 4, "w": 4, "x": 20, "y": 0 },
+      "options": { "colorMode": "background", "graphMode": "none" },
+      "fieldConfig": { "defaults": { "unit": "kbytes", "color": { "mode": "thresholds" }, "thresholds": { "steps": [{ "color": "green", "value": null }, { "color": "yellow", "value": 20000 }, { "color": "red", "value": 50000 }] } } },
+      "targets": [{ "expr": "plex_bandwidth_wan_kbps", "legendFormat": "WAN", "datasource": { "type": "prometheus" } }]
+    },
+    {
+      "id": 7,
+      "title": "Active Streams Over Time",
+      "type": "timeseries",
+      "gridPos": { "h": 8, "w": 12, "x": 0, "y": 4 },
+      "fieldConfig": { "defaults": { "color": { "mode": "palette-classic" }, "custom": { "lineWidth": 2, "fillOpacity": 10 } } },
+      "targets": [
+        { "expr": "plex_active_streams_total", "legendFormat": "Total", "datasource": { "type": "prometheus" } },
+        { "expr": "plex_active_streams_direct_play", "legendFormat": "Direct Play", "datasource": { "type": "prometheus" } },
+        { "expr": "plex_active_streams_transcode", "legendFormat": "Transcode", "datasource": { "type": "prometheus" } }
+      ]
+    },
+    {
+      "id": 8,
+      "title": "Bandwidth Over Time",
+      "type": "timeseries",
+      "gridPos": { "h": 8, "w": 12, "x": 12, "y": 4 },
+      "fieldConfig": { "defaults": { "unit": "kbytes", "color": { "mode": "palette-classic" }, "custom": { "lineWidth": 2, "fillOpacity": 10 } } },
+      "targets": [
+        { "expr": "plex_bandwidth_total_kbps", "legendFormat": "Total", "datasource": { "type": "prometheus" } },
+        { "expr": "plex_bandwidth_lan_kbps", "legendFormat": "LAN", "datasource": { "type": "prometheus" } },
+        { "expr": "plex_bandwidth_wan_kbps", "legendFormat": "WAN", "datasource": { "type": "prometheus" } }
+      ]
+    },
+    {
+      "id": 9,
+      "title": "Transcode Sessions Over Time",
+      "type": "timeseries",
+      "gridPos": { "h": 8, "w": 24, "x": 0, "y": 12 },
+      "fieldConfig": { "defaults": { "color": { "mode": "palette-classic" }, "custom": { "lineWidth": 2, "fillOpacity": 10 } } },
+      "targets": [
+        { "expr": "plex_transcode_video_sessions", "legendFormat": "Video", "datasource": { "type": "prometheus" } },
+        { "expr": "plex_transcode_audio_sessions", "legendFormat": "Audio", "datasource": { "type": "prometheus" } },
+        { "expr": "plex_transcode_container_sessions", "legendFormat": "Container", "datasource": { "type": "prometheus" } }
+      ]
+    }
+  ]
+}
