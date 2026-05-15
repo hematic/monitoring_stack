@@ -75,6 +75,16 @@ services:
       - TAUTULLI_URL=http://192.168.1.126:8181
       - TAUTULLI_API_KEY=${TAUTULLI_API_KEY}
 
+  abs-exporter:
+    image: ghcr.io/operationeth/audiobookshelf-exporter:latest
+    container_name: abs-exporter
+    restart: unless-stopped
+    networks:
+      - internal
+    environment:
+      - ABS_URL=https://listen.apps.hematic.net
+      - ABS_API_KEY=${ABS_API_KEY}
+
 networks:
   proxy:
     external: true

@@ -28,3 +28,7 @@ scrape_configs:
   - job_name: 'plex'
     static_configs:
       - targets: ['plex-exporter:8000']
+
+  - job_name: 'audiobookshelf'
+    static_configs:
+      - targets: ['abs-exporter:9860']
