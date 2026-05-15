@@ -25,6 +25,6 @@ scrape_configs:
     static_configs:
       - targets: ['cadvisor:8080']
 
-  - job_name: 'tautulli'
+  - job_name: 'plex'
     static_configs:
-      - targets: ['tautulli-exporter:8000']
+      - targets: ['plex-exporter:8000']

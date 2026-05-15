@@ -65,15 +65,15 @@ services:
       - '--path.sysfs=/host/sys'
       - '--collector.filesystem.mount-points-exclude=^/(sys|proc|dev|host|etc)($$|/)'
 
-  tautulli-exporter:
+  plex-exporter:
     image: mm404/tautulli-exporter:latest
-    container_name: tautulli-exporter
+    container_name: plex-exporter
     restart: unless-stopped
     networks:
       - internal
     environment:
-      - TAUTULLI_URL=http://192.168.1.126:8181
-      - TAUTULLI_API_KEY=${TAUTULLI_API_KEY}
+      - PLEX_URL=${PLEX_URL}
+      - PLEX_TOKEN=${PLEX_TOKEN}
 
 networks:
   proxy:
