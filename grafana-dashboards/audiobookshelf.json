@@ -379,7 +379,7 @@
             "type": "prometheus",
             "uid": "${DS_PROMETHEUS}"
           },
-          "expr": "audiobookshelf_up",
+          "expr": "up{job=\"audiobookshelf\"}",
           "legendFormat": "Exporter",
           "refId": "A"
         }
