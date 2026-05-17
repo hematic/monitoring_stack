@@ -31,3 +31,4 @@ limits_config:
 
 compactor:
   retention_enabled: true
+  delete_request_store: filesystem
