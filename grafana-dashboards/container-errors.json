@@ -1,0 +1,158 @@
+{
+  "title": "Container Errors",
+  "uid": "container-errors",
+  "schemaVersion": 38,
+  "version": 2,
+  "refresh": "30s",
+  "time": { "from": "now-24h", "to": "now" },
+  "templating": {
+    "list": [
+      {
+        "name": "DS_LOKI",
+        "type": "datasource",
+        "query": "loki",
+        "label": "Datasource",
+        "current": {}
+      },
+      {
+        "name": "host",
+        "type": "query",
+        "label": "Host",
+        "datasource": { "type": "loki", "uid": "${DS_LOKI}" },
+        "query": "label_values(host)",
+        "includeAll": true,
+        "multi": true,
+        "current": {}
+      },
+      {
+        "name": "container",
+        "type": "query",
+        "label": "Container",
+        "datasource": { "type": "loki", "uid": "${DS_LOKI}" },
+        "query": "label_values(container)",
+        "includeAll": true,
+        "multi": true,
+        "current": {}
+      }
+    ]
+  },
+  "panels": [
+    {
+      "id": 1,
+      "title": "Error Count (24h)",
+      "type": "stat",
+      "gridPos": { "h": 4, "w": 6, "x": 0, "y": 0 },
+      "options": {
+        "colorMode": "background",
+        "graphMode": "area",
+        "reduceOptions": { "calcs": ["lastNotNull"] }
+      },
+      "fieldConfig": {
+        "defaults": {
+          "color": { "mode": "thresholds" },
+          "thresholds": {
+            "steps": [
+              { "color": "green", "value": null },
+              { "color": "yellow", "value": 10 },
+              { "color": "red", "value": 50 }
+            ]
+          }
+        }
+      },
+      "targets": [
+        {
+          "datasource": { "type": "loki", "uid": "${DS_LOKI}" },
+          "expr": "sum(count_over_time({host=~\"$host\", container=~\"$container\", container!~\"loki|grafana|promtail|prometheus|cadvisor\"} |~ `(?i)(^|\\s|\\[)(error|fatal|panic|critical)(\\]|\\s|$)` [24h]))",
+          "legendFormat": "Errors",
+          "refId": "A"
+        }
+      ]
+    },
+    {
+      "id": 2,
+      "title": "Errors by Container (24h)",
+      "type": "table",
+      "gridPos": { "h": 4, "w": 18, "x": 6, "y": 0 },
+      "options": {
+        "cellHeight": "sm",
+        "showHeader": true,
+        "sortBy": [{ "desc": true, "displayName": "Errors" }]
+      },
+      "fieldConfig": {
+        "defaults": {},
+        "overrides": [
+          {
+            "matcher": { "id": "byName", "options": "Errors" },
+            "properties": [
+              {
+                "id": "custom.cellOptions",
+                "value": { "mode": "gradient", "type": "gauge" }
+              },
+              { "id": "color", "value": { "mode": "continuous-GrYlRd" } }
+            ]
+          }
+        ]
+      },
+      "targets": [
+        {
+          "datasource": { "type": "loki", "uid": "${DS_LOKI}" },
+          "expr": "sum by (container) (count_over_time({host=~\"$host\", container=~\"$container\", container!~\"loki|grafana|promtail|prometheus|cadvisor\"} |~ `(?i)(^|\\s|\\[)(error|fatal|panic|critical)(\\]|\\s|$)` [24h]))",
+          "legendFormat": "{{container}}",
+          "refId": "A",
+          "instant": true,
+          "range": false
+        }
+      ],
+      "transformations": [
+        {
+          "id": "labelsToFields",
+          "options": { "mode": "columns" }
+        },
+        {
+          "id": "merge",
+          "options": {}
+        },
+        {
+          "id": "organize",
+          "options": {
+            "excludeByName": { "Time": true },
+            "renameByName": {
+              "container": "Container",
+              "Value #A": "Errors"
+            }
+          }
+        },
+        {
+          "id": "sortBy",
+          "options": {
+            "fields": [{ "desc": true, "displayName": "Errors" }]
+          }
+        }
+      ]
+    },
+    {
+      "id": 3,
+      "title": "Error Log Stream",
+      "type": "logs",
+      "gridPos": { "h": 20, "w": 24, "x": 0, "y": 4 },
+      "options": {
+        "dedupStrategy": "none",
+        "enableLogDetails": true,
+        "prettifyLogMessage": false,
+        "showCommonLabels": false,
+        "showLabels": true,
+        "showTime": true,
+        "sortOrder": "Descending",
+        "wrapLogMessage": true
+      },
+      "targets": [
+        {
+          "datasource": { "type": "loki", "uid": "${DS_LOKI}" },
+          "expr": "{host=~\"$host\", container=~\"$container\", container!~\"loki|grafana|promtail|prometheus|cadvisor\"} |~ `(?i)(^|\\s|\\[)(error|fatal|panic|critical)(\\]|\\s|$)`",
+          "legendFormat": "",
+          "refId": "A"
+        }
+      ]
+    }
+  ]
+}
