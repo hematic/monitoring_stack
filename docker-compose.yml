@@ -92,15 +92,6 @@ services:
     depends_on:
       - loki
 
-  plex-exporter:
-    image: mm404/tautulli-exporter:latest
-    container_name: plex-exporter
-    restart: unless-stopped
-    networks:
-      - internal
-    environment:
-      - TAUTULLI_URL=http://192.168.1.126:8181
-      - TAUTULLI_API_KEY=${TAUTULLI_API_KEY}
 
   abs-exporter:
     image: ghcr.io/operationeth/audiobookshelf-exporter:latest
