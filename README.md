@@ -8,7 +8,7 @@ Prometheus + Grafana metrics stack running on the Thinkcentre.
 | Prometheus | Metrics collection (internal) | http://192.168.1.126:9090 |
 | cAdvisor | Thinkcentre container metrics | Internal |
 | node-exporter | Thinkcentre system metrics | Internal |
-| tautulli-exporter | Plex metrics via Tautulli API | Internal |
+
 
 ## Scrape Targets
 
@@ -17,7 +17,7 @@ Prometheus + Grafana metrics stack running on the Thinkcentre.
 | node-thinkcentre | node-exporter:9100 | Thinkcentre CPU/mem/disk/net |
 | node-nuc | 192.168.1.7:9100 | NUC CPU/mem/disk/net |
 | cadvisor | cadvisor:8080 | Docker container metrics |
-| tautulli | tautulli-exporter:8000 | Plex stream stats |
+
 
 ## Environment Variables
 
@@ -26,7 +26,6 @@ Prometheus + Grafana metrics stack running on the Thinkcentre.
 | `NETWORK` | Docker network (e.g. `proxy`) |
 | `GRAFANA_USER` | Grafana admin username |
 | `GRAFANA_PASSWORD` | Grafana admin password |
-| `TAUTULLI_API_KEY` | Tautulli API key (Settings → Web Interface) |
 
 ## Grafana Dashboard IDs
 

@@ -66,7 +66,6 @@ g = group("Media")
 http("Plex",          "https://192.168.1.90:32400/web",          g)
 http("Sonarr",        "https://sonarr.apps.hematic.net",        g, accept_302=True)
 http("Radarr",        "https://radarr.apps.hematic.net",        g, accept_302=True)
-http("Tautulli",      "https://tautulli.apps.hematic.net",      g)
 http("Jackett",       "https://jackett.apps.hematic.net",       g, accept_302=True)
 http("qBittorrent",   "https://qbittorrent.apps.hematic.net",   g, accept_302=True)
 
