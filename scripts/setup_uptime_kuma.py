@@ -63,7 +63,7 @@ def ping(name, hostname, parent=None):
 
 # Media
 g = group("Media")
-http("Plex",          "https://192.168.1.90:32400/web",          g)
+http("Jellyfin",      "https://jellyfin.apps.hematic.net",      g)
 http("Sonarr",        "https://sonarr.apps.hematic.net",        g, accept_302=True)
 http("Radarr",        "https://radarr.apps.hematic.net",        g, accept_302=True)
 http("Jackett",       "https://jackett.apps.hematic.net",       g, accept_302=True)
@@ -93,7 +93,6 @@ http("Komodo",               "https://komodo.apps.hematic.net",            g)
 http("Traefik",              "https://traefik-dashboard.apps.hematic.net", g)
 http("Authelia",             "https://auth.apps.hematic.net",              g)
 http("Grafana",              "https://grafana.apps.hematic.net",           g, accept_302=True)
-http("Dozzle",               "https://dozzle.apps.hematic.net",            g, accept_302=True)
 http("Scrutiny",             "https://scrutiny.apps.hematic.net",          g, accept_302=True)
 http("Uptime Kuma",          "https://kuma.apps.hematic.net",              g)
 http("Glances NUC",          "https://glances.apps.hematic.net",           g)
