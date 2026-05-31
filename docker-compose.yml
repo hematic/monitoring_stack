@@ -1,19 +1,29 @@
 services:
-  prometheus:
-    image: prom/prometheus:latest
-    container_name: prometheus
+  abs-exporter:
+    image: ghcr.io/operationeth/audiobookshelf-exporter:latest
+    container_name: abs-exporter
     restart: unless-stopped
     networks:
-      - ${NETWORK}
+      - internal
+    environment:
+      - ABS_URL=https://listen.apps.hematic.net
+      - ABS_API_KEY=${ABS_API_KEY}
+
+  cadvisor:
+    image: gcr.io/cadvisor/cadvisor:latest
+    container_name: cadvisor
+    restart: unless-stopped
+    privileged: true
+    networks:
       - internal
     volumes:
-      - /mnt/containers/komodo-stacks/monitoring_stack/prometheus.yml:/etc/prometheus/prometheus.yml:ro
-      - prometheus-data:/prometheus
-    command:
-      - '--config.file=/etc/prometheus/prometheus.yml'
-      - '--storage.tsdb.retention.time=30d'
-    ports:
-      - 9090:9090
+      - /:/rootfs:ro
+      - /var/run:/var/run:ro
+      - /sys:/sys:ro
+      - /var/lib/docker:/var/lib/docker:ro
+      - /dev/disk/:/dev/disk:ro
+    devices:
+      - /dev/kmsg
 
   grafana:
     image: grafana/grafana:latest
@@ -33,21 +43,19 @@ services:
     depends_on:
       - prometheus
 
-  cadvisor:
-    image: gcr.io/cadvisor/cadvisor:latest
-    container_name: cadvisor
+  loki:
+    image: grafana/loki:latest
+    container_name: loki
     restart: unless-stopped
-    privileged: true
     networks:
+      - ${NETWORK}
       - internal
     volumes:
-      - /:/rootfs:ro
-      - /var/run:/var/run:ro
-      - /sys:/sys:ro
-      - /var/lib/docker:/var/lib/docker:ro
-      - /dev/disk/:/dev/disk:ro
-    devices:
-      - /dev/kmsg
+      - /mnt/containers/komodo-stacks/monitoring_stack/loki-config.yml:/etc/loki/loki-config.yml:ro
+      - loki-data:/loki
+    command: -config.file=/etc/loki/loki-config.yml
+    ports:
+      - 3100:3100
 
   node-exporter:
     image: prom/node-exporter:latest
@@ -65,19 +73,21 @@ services:
       - '--path.sysfs=/host/sys'
       - '--collector.filesystem.mount-points-exclude=^/(sys|proc|dev|host|etc)($$|/)'
 
-  loki:
-    image: grafana/loki:latest
-    container_name: loki
+  prometheus:
+    image: prom/prometheus:latest
+    container_name: prometheus
     restart: unless-stopped
     networks:
       - ${NETWORK}
       - internal
     volumes:
-      - /mnt/containers/komodo-stacks/monitoring_stack/loki-config.yml:/etc/loki/loki-config.yml:ro
-      - loki-data:/loki
-    command: -config.file=/etc/loki/loki-config.yml
+      - /mnt/containers/komodo-stacks/monitoring_stack/prometheus.yml:/etc/prometheus/prometheus.yml:ro
+      - prometheus-data:/prometheus
+    command:
+      - '--config.file=/etc/prometheus/prometheus.yml'
+      - '--storage.tsdb.retention.time=30d'
     ports:
-      - 3100:3100
+      - 9090:9090
 
   promtail:
     image: grafana/promtail:latest
@@ -91,17 +101,6 @@ services:
     command: -config.file=/etc/promtail/promtail.yml
     depends_on:
       - loki
-
-
-  abs-exporter:
-    image: ghcr.io/operationeth/audiobookshelf-exporter:latest
-    container_name: abs-exporter
-    restart: unless-stopped
-    networks:
-      - internal
-    environment:
-      - ABS_URL=https://listen.apps.hematic.net
-      - ABS_API_KEY=${ABS_API_KEY}
 
 networks:
   proxy:
