@@ -58,7 +58,7 @@ services:
       - 3100:3100
 
   myspeed:
-    image: ghcr.io/gnmyt/myspeed:latest
+    image: germannewsmaker/myspeed:latest
     container_name: myspeed
     restart: unless-stopped
     networks:
