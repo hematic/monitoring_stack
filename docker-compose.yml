@@ -57,6 +57,22 @@ services:
     ports:
       - 3100:3100
 
+  myspeed:
+    image: ghcr.io/gnmyt/myspeed:latest
+    container_name: myspeed
+    restart: unless-stopped
+    networks:
+      - ${NETWORK}
+    ports:
+      - 5216:5216
+    volumes:
+      - myspeed-data:/etc/myspeed
+    healthcheck:
+      test: ["CMD", "curl", "-s", "--fail", "http://localhost:5216"]
+      interval: 30s
+      timeout: 5s
+      retries: 3
+
   node-exporter:
     image: prom/node-exporter:latest
     container_name: node-exporter
@@ -112,3 +128,4 @@ volumes:
   prometheus-data:
   grafana-data:
   loki-data:
+  myspeed-data:
