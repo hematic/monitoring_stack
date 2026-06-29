@@ -76,8 +76,6 @@ http("Komga",          "https://komga.apps.hematic.net",  g)
 
 # Tools
 g = group("Tools")
-http("Stirling PDF",        "https://pdf.apps.hematic.net",         g, accept_302=True)
-http("MeTube",              "https://metube.apps.hematic.net",      g, accept_302=True)
 http("FileBrowser Quantum", "https://share.apps.hematic.net",       g, accept_302=True)
 http("ConvertX",            "https://convertx.apps.hematic.net",    g, accept_302=True)
 http("NexTerm",             "https://nexterm.apps.hematic.net",      g, accept_302=True)
